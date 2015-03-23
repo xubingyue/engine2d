@@ -68,8 +68,8 @@ engine2d_win_init(int orix, int oriy, int width, int height, float scale, const 
     
     lua_pushstring(L, folder);
     lua_pushstring(L, "examples/test001.lua");
-    // lua_pushstring(L, "examples/ex01.lua");
-    // lua_pushstring(L, "examples/flappybird.lua");
+    //lua_pushstring(L, "examples/ex01.lua");
+    //lua_pushstring(L, "examples/flappybird.lua");
     err = lua_pcall(L, 2, 0, tb);
     if (err) {
         const char *msg = lua_tostring(L,-1);

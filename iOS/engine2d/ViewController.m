@@ -49,6 +49,7 @@ static ViewController *_controller = nil;
     NSString *appFolderPath = [[NSBundle mainBundle]resourcePath];
     const char* folder = [appFolderPath UTF8String];
     
+    engine2d_win_init(bounds.origin.x, bounds.origin.y, bounds.size.width, bounds.size.height, screenScale, folder);
 
 }
 
@@ -69,13 +70,12 @@ static ViewController *_controller = nil;
 //MARK: 逻辑循序
 - (void)update
 {
-
-    
+    engine2d_win_update();
 }
 
 -(void)glkView:(GLKView *)view drawInRect:(CGRect)rect
 {
-    
+    engine2d_win_frame();
 }
 
 //MARK: TOUCH
@@ -83,7 +83,7 @@ static ViewController *_controller = nil;
 {
     for(UITouch *touch in touches){
         CGPoint p = [touch locationInView:touch.view];
-        
+        engine2d_win_touch(p.x, p.y, TOUCH_BEGIN);
     }
 }
 
@@ -91,7 +91,7 @@ static ViewController *_controller = nil;
 {
     for(UITouch *touch in touches){
         CGPoint p = [touch locationInView:touch.view];
-        
+        engine2d_win_touch(p.x, p.y, TOUCH_MOVE);
     }
 
 }
@@ -100,6 +100,7 @@ static ViewController *_controller = nil;
 {
     for(UITouch *touch in touches) {
         CGPoint p = [touch locationInView:touch.view];
+        engine2d_win_touch(p.x, p.y, TOUCH_END);
     }
 }
 

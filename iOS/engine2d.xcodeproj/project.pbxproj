@@ -17,7 +17,6 @@
 		799F60011AB6659E00D630F2 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 799F60001AB6659E00D630F2 /* ViewController.m */; };
 		799F60061AB6659E00D630F2 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 799F60051AB6659E00D630F2 /* Images.xcassets */; };
 		799F60151AB6659E00D630F2 /* engine2dTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 799F60141AB6659E00D630F2 /* engine2dTests.m */; };
-		799F607E1AB6661800D630F2 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 799F607D1AB6661800D630F2 /* Default-568h@2x.png */; };
 		799F60811AB669C600D630F2 /* winfw.c in Sources */ = {isa = PBXBuildFile; fileRef = 799F607F1AB669C600D630F2 /* winfw.c */; };
 		799F60851AB66BE300D630F2 /* engine2dgame.c in Sources */ = {isa = PBXBuildFile; fileRef = 799F60831AB66BE300D630F2 /* engine2dgame.c */; };
 		799F60881AB66E4700D630F2 /* fault.c in Sources */ = {isa = PBXBuildFile; fileRef = 799F60861AB66E4700D630F2 /* fault.c */; };
@@ -29,9 +28,6 @@
 		799F609D1AB69AF100D630F2 /* shader.c in Sources */ = {isa = PBXBuildFile; fileRef = 799F609B1AB69AF100D630F2 /* shader.c */; };
 		799F60A01AB69CB200D630F2 /* renderbuffer.c in Sources */ = {isa = PBXBuildFile; fileRef = 799F609E1AB69CB200D630F2 /* renderbuffer.c */; };
 		79B81EE91ABC1DDD00869331 /* dfont.c in Sources */ = {isa = PBXBuildFile; fileRef = 79B81EE71ABC1DDD00869331 /* dfont.c */; };
-		79B81EEC1ABC1F3200869331 /* GLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 79B81EEB1ABC1F3200869331 /* GLKit.framework */; };
-		79B81EEE1ABC1F3700869331 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 79B81EED1ABC1F3700869331 /* OpenGLES.framework */; };
-		79B81EF01ABC1F3B00869331 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 79B81EEF1ABC1F3B00869331 /* CoreGraphics.framework */; };
 		79B81EF21ABC203800869331 /* font.m in Sources */ = {isa = PBXBuildFile; fileRef = 79B81EF11ABC203800869331 /* font.m */; };
 		79B81EF41ABC21C800869331 /* lsprite.c in Sources */ = {isa = PBXBuildFile; fileRef = 79B81EF31ABC21C800869331 /* lsprite.c */; };
 		79B81EF61ABC223200869331 /* lrenderbuffer.c in Sources */ = {isa = PBXBuildFile; fileRef = 79B81EF51ABC223200869331 /* lrenderbuffer.c */; };
@@ -71,6 +67,9 @@
 		79E9FEBE1ABFBB4F001A6328 /* lutf8lib.c in Sources */ = {isa = PBXBuildFile; fileRef = 79E9FE9B1ABFBB4F001A6328 /* lutf8lib.c */; };
 		79E9FEBF1ABFBB4F001A6328 /* lvm.c in Sources */ = {isa = PBXBuildFile; fileRef = 79E9FE9C1ABFBB4F001A6328 /* lvm.c */; };
 		79E9FEC01ABFBB4F001A6328 /* lzio.c in Sources */ = {isa = PBXBuildFile; fileRef = 79E9FE9E1ABFBB4F001A6328 /* lzio.c */; };
+		79E9FEC41ABFC2E2001A6328 /* examples in Resources */ = {isa = PBXBuildFile; fileRef = 79E9FEC31ABFC2E2001A6328 /* examples */; };
+		79E9FEC61ABFC2E8001A6328 /* engine2d_lua in Resources */ = {isa = PBXBuildFile; fileRef = 79E9FEC51ABFC2E8001A6328 /* engine2d_lua */; };
+		79E9FEC81ABFC2FE001A6328 /* init.lua in Resources */ = {isa = PBXBuildFile; fileRef = 79E9FEC71ABFC2FE001A6328 /* init.lua */; };
 		79F499701AB7292F003E4997 /* screen.c in Sources */ = {isa = PBXBuildFile; fileRef = 79F4996E1AB7292F003E4997 /* screen.c */; };
 		79F499971AB82F4F003E4997 /* label.c in Sources */ = {isa = PBXBuildFile; fileRef = 79F499951AB82F4F003E4997 /* label.c */; };
 /* End PBXBuildFile section */
@@ -107,7 +106,6 @@
 		799F600E1AB6659E00D630F2 /* engine2dTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = engine2dTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		799F60131AB6659E00D630F2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		799F60141AB6659E00D630F2 /* engine2dTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = engine2dTests.m; sourceTree = "<group>"; };
-		799F607D1AB6661800D630F2 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		799F607F1AB669C600D630F2 /* winfw.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = winfw.c; sourceTree = "<group>"; };
 		799F60801AB669C600D630F2 /* winfw.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = winfw.h; sourceTree = "<group>"; };
 		799F60831AB66BE300D630F2 /* engine2dgame.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = engine2dgame.c; sourceTree = "<group>"; };
@@ -136,9 +134,6 @@
 		79B81EE71ABC1DDD00869331 /* dfont.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = dfont.c; sourceTree = "<group>"; };
 		79B81EE81ABC1DDD00869331 /* dfont.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dfont.h; sourceTree = "<group>"; };
 		79B81EEA1ABC1E0F00869331 /* list.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = list.h; sourceTree = "<group>"; };
-		79B81EEB1ABC1F3200869331 /* GLKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLKit.framework; path = System/Library/Frameworks/GLKit.framework; sourceTree = SDKROOT; };
-		79B81EED1ABC1F3700869331 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
-		79B81EEF1ABC1F3B00869331 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		79B81EF11ABC203800869331 /* font.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = font.m; sourceTree = "<group>"; };
 		79B81EF31ABC21C800869331 /* lsprite.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = lsprite.c; sourceTree = "<group>"; };
 		79B81EF51ABC223200869331 /* lrenderbuffer.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = lrenderbuffer.c; sourceTree = "<group>"; };
@@ -205,6 +200,9 @@
 		79E9FE9D1ABFBB4F001A6328 /* lvm.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lvm.h; sourceTree = "<group>"; };
 		79E9FE9E1ABFBB4F001A6328 /* lzio.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = lzio.c; sourceTree = "<group>"; };
 		79E9FE9F1ABFBB4F001A6328 /* lzio.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lzio.h; sourceTree = "<group>"; };
+		79E9FEC31ABFC2E2001A6328 /* examples */ = {isa = PBXFileReference; lastKnownFileType = folder; name = examples; path = ../../examples; sourceTree = "<group>"; };
+		79E9FEC51ABFC2E8001A6328 /* engine2d_lua */ = {isa = PBXFileReference; lastKnownFileType = folder; name = engine2d_lua; path = ../../engine2d_lua; sourceTree = "<group>"; };
+		79E9FEC71ABFC2FE001A6328 /* init.lua */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = init.lua; path = ../engine2d_lua/init.lua; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.lua; };
 		79F4996E1AB7292F003E4997 /* screen.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = screen.c; sourceTree = "<group>"; };
 		79F4996F1AB7292F003E4997 /* screen.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = screen.h; sourceTree = "<group>"; };
 		79F499951AB82F4F003E4997 /* label.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = label.c; sourceTree = "<group>"; };
@@ -217,9 +215,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				79B81EF01ABC1F3B00869331 /* CoreGraphics.framework in Frameworks */,
-				79B81EEE1ABC1F3700869331 /* OpenGLES.framework in Frameworks */,
-				79B81EEC1ABC1F3200869331 /* GLKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -236,10 +231,7 @@
 		799F5FEC1AB6659E00D630F2 = {
 			isa = PBXGroup;
 			children = (
-				79B81EEF1ABC1F3B00869331 /* CoreGraphics.framework */,
-				79B81EED1ABC1F3700869331 /* OpenGLES.framework */,
-				79B81EEB1ABC1F3200869331 /* GLKit.framework */,
-				799F607D1AB6661800D630F2 /* Default-568h@2x.png */,
+				79E9FEC71ABFC2FE001A6328 /* init.lua */,
 				799F5FF71AB6659E00D630F2 /* engine2d */,
 				799F60111AB6659E00D630F2 /* engine2dTests */,
 				799F5FF61AB6659E00D630F2 /* Products */,
@@ -258,6 +250,8 @@
 		799F5FF71AB6659E00D630F2 /* engine2d */ = {
 			isa = PBXGroup;
 			children = (
+				79E9FEC51ABFC2E8001A6328 /* engine2d_lua */,
+				79E9FEC31ABFC2E2001A6328 /* examples */,
 				79E9FE641ABFBB4F001A6328 /* lua */,
 				799F60821AB66B1D00D630F2 /* lib */,
 				799F5FFC1AB6659E00D630F2 /* AppDelegate.h */,
@@ -499,8 +493,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				79E9FEC81ABFC2FE001A6328 /* init.lua in Resources */,
+				79E9FEC61ABFC2E8001A6328 /* engine2d_lua in Resources */,
 				799F60061AB6659E00D630F2 /* Images.xcassets in Resources */,
-				799F607E1AB6661800D630F2 /* Default-568h@2x.png in Resources */,
+				79E9FEC41ABFC2E2001A6328 /* examples in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

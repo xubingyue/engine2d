@@ -14,11 +14,11 @@
 		<string>https://github.com/liutianshx2012/engine2d.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
-	<string>engine2d.xcodeproj</string>
+	<string>iOS/engine2d.xcodeproj</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
 		<key>CF10FCACFDE2144E1106ED7F2958A0CC6D4E37AB</key>
-		<string>../..</string>
+		<string>../../..</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
 	<string>https://github.com/liutianshx2012/engine2d.git</string>
