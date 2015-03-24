@@ -14,6 +14,7 @@
 #include "screen.h"
 #include "texture.h"
 #include "array.h"
+#include "spritepack.h"
 #include "render.h"
 #include "material.h"
 #include "fault.h"
@@ -49,10 +50,59 @@ lunload(lua_State *L){
 
 
 
+/*
+	int texture
+	table float[16]  
+	uint32_t color
+	uint32_t additive
+*/
 static int
 ldraw(lua_State *L){
-
-
+    int tex = (int)luaL_checkinteger(L,1);
+    int texid = texture_glid(tex);
+    if (texid == 0) {
+        lua_pushboolean(L,0);
+        return 1;
+    }
+    luaL_checktype(L, 2, LUA_TTABLE);
+    uint32_t color = 0xffffffff;
+    
+    if (!lua_isnoneornil(L,3)) {
+        color = (uint32_t)lua_tointeger(L,3);
+    }
+    uint32_t additive = (uint32_t)luaL_optinteger(L,4,0);
+    shader_program(PROGRAM_PICTURE, NULL);
+    shader_texture(texid, 0);
+    int n = lua_rawlen(L, 2);
+    int point = n/4;
+    if (point * 4 != n) {
+        return luaL_error(L, "Invalid polygon");
+    }
+    ARRAY(struct vertex_pack, vb, point);
+    int i;
+    for (i=0;i<point;i++) {
+        lua_rawgeti(L, 2, i*2+1);
+        lua_rawgeti(L, 2, i*2+2);
+        lua_rawgeti(L, 2, point*2+i*2+1);
+        lua_rawgeti(L, 2, point*2+i*2+2);
+        float tx = lua_tonumber(L, -4);
+        float ty = lua_tonumber(L, -3);
+        float vx = lua_tonumber(L, -2);
+        float vy = lua_tonumber(L, -1);
+        uint16_t u,v;
+        lua_pop(L,4);
+        screen_trans(&vx,&vy);
+        texture_coord(tex, tx, ty, &u, &v);
+        vb[i].vx = vx + 1.0f;
+        vb[i].vy = vy - 1.0f;
+        vb[i].tx = u;
+        vb[i].ty = v;
+    }
+    if (point == 4) {
+        shader_draw(vb, color, additive);
+    } else {
+        shader_drawpolygon(point, vb, color, additive);
+    }
     return 0;
 }
 
@@ -76,8 +126,9 @@ lversion(lua_State*L){
 
 static int
 lclear(lua_State *L){
-    lua_pushinteger(L, shader_version());
-    return 1;
+	uint32_t c = luaL_optinteger(L, 1, 0xff000000);
+	shader_clear(c);
+    return 0;
 }
 
 static int
@@ -94,7 +145,7 @@ luniform_bind(lua_State *L){
         enum UNIFORM_FORMAT format = (enum UNIFORM_FORMAT)luaL_checkinteger(L, -1);
         int loc = shader_adduniform(prog, name, format);
         if(loc != i){
-            fault("!waring : Invalid uniform local");
+            fault("!waring : Invalid uniform location %s",name);
         }
         lua_pop(L, 3);
     }
@@ -113,7 +164,7 @@ luniform_set(lua_State *L){
     }
     int top = lua_gettop(L);
     if(top != n + 3){
-        return luaL_error(L, "Need float %d,only %d passed",top,n-3);
+        return luaL_error(L, "Need float %d,only %d passed",n,top-3);
     }
     int i;
     for(i=0;i<n;i++){

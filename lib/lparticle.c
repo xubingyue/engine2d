@@ -6,7 +6,6 @@
 //  Copyright (c) 2015年 liutianshx. All rights reserved.
 //
 
-#include <stdio.h>
 
 
 #include "particle.h"
