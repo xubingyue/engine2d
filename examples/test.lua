@@ -1,6 +1,6 @@
-local ej = require "ejoy2d"
-local fw = require "ejoy2d.framework"
-local pack = require "ejoy2d.simplepackage"
+local ej = require "engine2d"
+local fw = require "engine2d.framework"
+local pack = require "engine2d.simplepackage"
 
 pack.load {
 	pattern = fw.WorkDir..[[examples/asset/?]],
@@ -41,7 +41,7 @@ function game.update()
 end
 
 function game.drawframe()
-	ej.clear(0xff808080)
+	ej.clear(0xffff8080)
 
     idle:draw()
     die:draw()

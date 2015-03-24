@@ -10,7 +10,6 @@
 #include <stdarg.h>
 
 
-#include "fault.h"
 #include "platform_print.h"
 
 void
