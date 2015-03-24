@@ -8,8 +8,7 @@
 
 #include "screen.h"
 #include "render.h"
-
-#define SCREEN_SCALE 16
+#include "spritepack.h"
 
 
 struct screen{
@@ -28,6 +27,7 @@ static struct render *R = NULL;
 void
 screen_initrender(struct render *r){
     R= r;
+	screen_init(SCREEN.width, SCREEN.height, SCREEN.scale);
 }
 
 void
@@ -35,8 +35,8 @@ screen_init(float w,float h,float scale){
     SCREEN.width = (int)w;
     SCREEN.height = (int)h;
     SCREEN.scale = scale;
-    SCREEN.invh = 2.0f/ SCREEN_SCALE /w;
-    SCREEN.invw = 2.0f /SCREEN_SCALE /h;
+    SCREEN.invw = 2.0f/ SCREEN_SCALE /w;
+    SCREEN.invh = - 2.0f /SCREEN_SCALE /h;
     if(R){
         render_setviewport(R, 0, 0, w*scale, h*scale);
     }
@@ -66,17 +66,21 @@ screen_scissor(int x,int y,int w,int h){
         h=0;
     }
     if(w<=0 || h<= 0){
-        x *= SCREEN.scale;
-        y *= SCREEN.scale;
-        w *= SCREEN.scale;
-        h *= SCREEN.scale;
+        w=0;
+        h=0;
     }
+    x *= SCREEN.scale;
+    y *= SCREEN.scale;
+    w *= SCREEN.scale;
+    h *= SCREEN.scale;
+
     render_setscissor(R,x,y,w,h);
 }
 
 bool
-screen_is_visible(float x,float y){
-    return x >= 0.0f && x <=2.0f && y>= -2.0 && y <= 0.0;
+screen_is_visible(float x,float y)
+{
+    return x >= 0.0f && x <=2.0f && y>= -2.0f && y <= 0.0f;
 }
 
 bool

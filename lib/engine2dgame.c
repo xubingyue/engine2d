@@ -50,8 +50,37 @@ _panic(lua_State *L){
     fault("%s",err);
     return 0;
 }
-
-
+static void stackDump(lua_State* L){
+    printf("\nbegin dump lua stack \n");
+    int i = 0;
+    int top = lua_gettop(L);
+    for (i = 1; i <= top; ++i) {
+        int t = lua_type(L, i);
+        switch (t) {
+            case LUA_TSTRING:
+            {
+                printf("'%s' \n", lua_tostring(L, i));
+            }
+                break;
+            case LUA_TBOOLEAN:
+            {
+                printf(lua_toboolean(L, i) ? "true " : "false ");
+            }break;
+            case LUA_TNUMBER:
+            {
+                printf("%g \n", lua_tonumber(L, i));
+            }
+                break;
+            default:
+            {
+                printf("%s \n ", lua_typename(L, t));
+            }
+                break;
+        }
+    }
+    printf("\nEND dump lua stack");
+    
+}
 static int
 linject(lua_State *L){
     static const char * engine_callback[] = {
@@ -65,11 +94,13 @@ linject(lua_State *L){
         ENGINE_RESUME,
         ENGINE_PAUSE,
     };
+
     int i ;
-    for (i=0; i<sizeof(engine_callback)/sizeof(engine_callback[0]); i++) {
-        lua_getfield(L, lua_upvalueindex(i), engine_callback[i]);
-        if(!lua_isfunction(L, -1)){
-            return luaL_error(L, "%s is not found",engine_callback[i]);
+    for (i=0;i<sizeof(engine_callback)/sizeof(engine_callback[0]);i++) {
+        lua_getfield(L, lua_upvalueindex(1),engine_callback[i]);
+        //stackDump(L);
+        if (!lua_isfunction(L,-1)) {
+            return luaL_error(L, "%s is not found", engine_callback[i]);
         }
         lua_setfield(L, LUA_REGISTRYINDEX, engine_callback[i]);
     }
@@ -95,7 +126,8 @@ checkluaversion(lua_State *L){
     if(v != lua_version(NULL)){
         fault("multiple Lua VMs detected");
     }else if(*v != LUA_VERSION_NUM){
-        fault("Lua version mismatch: app. needs %f, Lua core provides %f",LUA_VERSION_NUM,*v);
+        fault("Lua version mismatch: app. needs %f, Lua core provides %f",
+		LUA_VERSION_NUM,*v);
     }
 }
 #if __ANDROID__
@@ -107,6 +139,17 @@ checkluaversion(lua_State *L){
 #endif
 
 
+lua_State *
+engine2d_lua_init(){
+    lua_State * L = luaL_newstate();
+    checkluaversion(L);
+    lua_pushliteral(L, OS_STRING);
+    lua_setglobal(L, "OS");
+    
+    lua_atpanic(L, _panic);
+    luaL_openlibs(L);
+    return L;
+}
 
 struct game *
 engine2d_game(){
@@ -135,33 +178,6 @@ engine2d_game(){
 }
 
 
-lua_State *
-engine2d_lua_init(){
-    lua_State * L = luaL_newstate();
-    checkluaversion(L);
-    lua_pushliteral(L, OS_STRING);
-    lua_setglobal(L, "OS");
-    
-    lua_atpanic(L, _panic);
-    luaL_openlibs(L);
-    return L;
-}
-
-
-
-
-
-
-void
-engine2d_game_exit(struct game * g){
-    engine2d_close_lua(g);
-    //...todo  unload  shader
-    label_unload();
-    texture_exit();
-    shader_unload();
-}
-
-
 void
 engine2d_close_lua(struct game * g){
     if(g){
@@ -172,6 +188,16 @@ engine2d_close_lua(struct game * g){
         free(g);
     }
 }
+
+void
+engine2d_game_exit(struct game * g){
+    engine2d_close_lua(g);
+    //...todo  unload  shader
+    label_unload();
+    texture_exit();
+    shader_unload();
+}
+
 
 lua_State *
 engine2d_game_lua(struct game *g){
@@ -241,8 +267,6 @@ engine2d_handle_error(lua_State *L,const char * err_type,const char *err_msg){
     }
 }
 
-
-
 static int
 call(lua_State *L,int n,int r){
     int err = lua_pcall(L, n, r, TRACEBACK_FUNCTION);
@@ -273,10 +297,16 @@ call(lua_State *L,int n,int r){
     return err;
 }
 
+void
+engine2d_call_lua(lua_State *L,int n,int r){
+    call(L, n, r);
+    lua_settop(L, TOP_FUNCTION);
+}
 static void
 logic_frame(lua_State *L){
     lua_pushvalue(L, UPDATE_FUNCTION);
     call(L,0,0);
+	lua_settop(L, TOP_FUNCTION);
 }
 
 void
@@ -349,14 +379,6 @@ engine2d_game_message(struct game *g,int id_,const char* state, const char* data
 
 
 void
-engine2d_game_pause(struct game *G){
-    lua_State *L = G->L;
-    lua_getfield(L, LUA_REGISTRYINDEX, ENGINE_PAUSE);
-    call(L, 0, 0);
-    lua_settop(L, TOP_FUNCTION);
-}
-
-void
 engine2d_game_resume(struct game *G){
     lua_State *L = G->L;
     lua_getfield(L, LUA_REGISTRYINDEX, ENGINE_RESUME);
@@ -364,9 +386,14 @@ engine2d_game_resume(struct game *G){
     lua_settop(L, TOP_FUNCTION);
 }
 
+
 void
-engine2d_call_lua(lua_State *L,int n,int r){
-    call(L, n, r);
+engine2d_game_pause(struct game *G){
+    lua_State *L = G->L;
+    lua_getfield(L, LUA_REGISTRYINDEX, ENGINE_PAUSE);
+    call(L, 0, 0);
     lua_settop(L, TOP_FUNCTION);
 }
+
+
 

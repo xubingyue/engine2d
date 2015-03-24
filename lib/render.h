@@ -28,7 +28,7 @@ struct render_init_args{
 /**
  *  顶点
  */
-struct vertex_attib {
+struct vertex_attrib {
     const char * name;
     int vbslot;
     int n;
@@ -148,7 +148,7 @@ render_release(struct render *R,enum RENDER_OBJ what,RID id);
 
 
 RID
-render_register_vertexlayout(struct render *R,int n, struct  vertex_attib * attrib);
+render_register_vertexlayout(struct render *R,int n, struct  vertex_attrib * attrib);
 
 //buffer
 RID

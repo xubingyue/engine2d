@@ -116,10 +116,10 @@ shader_init(){
     rs->index_buffer = render_buffer_create(rs->R, INDEXBUFFER, idxs, 6 * MAX_COMMBINE, sizeof(uint16_t));
     rs->vertex_buffer = render_buffer_create(rs->R, VERTEXBUFFER, NULL, 4 * MAX_COMMBINE, sizeof(struct vertex));
     
-    struct vertex_attib va[4] ={
-        {"postion",0,2,sizeof(float),BUFFER_OFFSET(vp.vx)},
+    struct vertex_attrib va[4] ={
+        {"position",0,2,sizeof(float),BUFFER_OFFSET(vp.vx)},
         {"texcoord",0,2,sizeof(uint16_t),BUFFER_OFFSET(vp.tx)},
-        {"color",0,4,sizeof(float),BUFFER_OFFSET(rgba)},
+        {"color",0,4,sizeof(uint8_t),BUFFER_OFFSET(rgba)},
         {"additive",0,4,sizeof(uint8_t),BUFFER_OFFSET(add)},
     };
     rs->layout = render_register_vertexlayout(rs->R, sizeof(va)/sizeof(va[0]), va);
@@ -128,6 +128,21 @@ shader_init(){
     render_set(rs->R, VERTEXBUFFER, rs->vertex_buffer, 0);
     
     RS = rs;
+}
+
+//reset
+void
+shader_reset(){
+    struct render_state * rs = RS;
+    render_state_reset(rs->R);
+    render_setblend(rs->R, BLEND_ONE, BLEND_ONE_MINUS_SRC_ALPHA);
+    if(RS->current_program != -1){
+        render_shader_bind(rs->R, RS->program[RS->current_program].prog);
+    }
+    render_set(rs->R, VERTEXLAYOUT, rs->layout, 0);
+    render_set(rs->R, TEXTURE, RS->tex[0], 0);
+    render_set(rs->R, INDEXBUFFER, RS->index_buffer, 0);
+    render_set(rs->R, VERTEXBUFFER, RS->vertex_buffer, 0);
 }
 
 static void
@@ -152,7 +167,7 @@ shader_load(int prog,const char *fs,const char*vs,
     assert(prog >= 0 && prog < MAX_PROGRAM);
     struct program *p = &rs->program[prog];
     if(p->prog){
-        render_release(rs->R, SHADER, p->prog);
+        render_release(RS->R, SHADER, p->prog);
         p->prog = 0;
     }
     program_init(p, fs, vs, texture, texture_uniform_name);
@@ -170,7 +185,9 @@ shader_unload(){
     texture_initrender(NULL);
     screen_initrender(NULL);
     // todo  initrender(NULL)
-    label_initrender(R);
+    label_initrender(NULL);
+    lsprite_initrender(NULL);
+    renderbuffer_initrender(NULL);
     
     render_exit(R);
     free(R);
@@ -217,24 +234,34 @@ rs_commit(){
 
 
 void
-shader_blend(int m1,int m2){
-    if(m1 !=BLEND_GL_ONE || m2 != BLEND_GL_ONE_MINUS_SRC_ALPHA){
-        rs_commit();
-        RS->blendchange = 1;
-        enum BLEND_FORMAT src = blend_mode(m1);
-        enum BLEND_FORMAT dst = blend_mode(m2);
-        render_setblend(RS->R, src, dst);
+shader_drawbuffer(struct render_buffer *rb,float tx, float ty,float scale){
+    rs_commit();
+    
+    RID glid = texture_glid(rb->texid);
+    if(glid == 0){
+        return;
     }
+    shader_texture(glid, 0);
+    render_set(RS->R, VERTEXBUFFER, rb->vbid, 0);
+    
+    float sx = scale;
+    float sy = scale;
+    screen_trans(&sx, &sy);
+    screen_trans(&tx, &ty);
+    float v[4] = {sx,sy,tx,ty};
+    
+    shader_setuniform(PROGRAM_RENDERBUFFER, 0, UNIFORM_FLOAT4, v);
+
+    shader_program(PROGRAM_RENDERBUFFER, NULL);
+    RS->drawcall++;
+    
+    renderbuffer_commit(rb);
+    
+    render_set(RS->R, VERTEXBUFFER, RS->vertex_buffer, 0);
 }
 
-void
-shader_defaultblend(){
-    if(RS->blendchange){
-        rs_commit();
-        RS->blendchange = 0;
-        render_setblend(RS->R, BLEND_ONE, BLEND_ONE_MINUS_SRC_ALPHA);
-    }
-}
+
+
 
 void
 shader_texture(int id,int channel){
@@ -247,10 +274,7 @@ shader_texture(int id,int channel){
 }
 
 
-void
-shader_draw(const struct vertex_pack vb[4],uint32_t color,uint32_t addtive){
-    
-}
+
 
 static void
 apply_uniform(struct program *p){
@@ -287,6 +311,13 @@ shader_program(int n, struct material*m){
     }
 }
 
+void
+shader_draw(const struct vertex_pack vb[4],uint32_t color,uint32_t addtive){
+	if (renderbuffer_add(&RS->vb, vb, color, addtive)) {
+		rs_commit();
+	}
+    
+}
 static void
 draw_quad(const struct vertex_pack *vbp, uint32_t color, uint32_t additive, int max, int index) {
     struct vertex_pack vb[4];
@@ -318,10 +349,36 @@ shader_flush(){
 }
 
 void
+shader_defaultblend(){
+    if(RS->blendchange){
+        rs_commit();
+        RS->blendchange = 0;
+        render_setblend(RS->R, BLEND_ONE, BLEND_ONE_MINUS_SRC_ALPHA);
+    }
+}
+
+
+
+void
+shader_blend(int m1,int m2){
+    if(m1 !=BLEND_GL_ONE || m2 != BLEND_GL_ONE_MINUS_SRC_ALPHA){
+        rs_commit();
+        RS->blendchange = 1;
+        enum BLEND_FORMAT src = blend_mode(m1);
+        enum BLEND_FORMAT dst = blend_mode(m2);
+        render_setblend(RS->R, src, dst);
+    }
+}
+
+
+
+void
 shader_clear(unsigned long argb){
     struct render * R = RS->R;
     render_clear(R, MASKC, argb);
 }
+
+
 
 int
 shader_version(){
@@ -329,76 +386,12 @@ shader_version(){
 }
 
 
+
 void
 shader_scissortest(int enable){
     render_enablescissor(RS->R, enable);
 }
 
-void
-shader_drawbuffer(struct render_buffer *rb,float tx, float ty,float scale){
-    rs_commit();
-    
-    RID glid = texture_glid(rb->texid);
-    if(glid == 0){
-        return;
-    }
-    shader_texture(glid, 0);
-    render_set(RS->R, VERTEXBUFFER, rb->vbid, 0);
-    
-    float sx = scale;
-    float sy = scale;
-    screen_trans(&sx, &sy);
-    screen_trans(&tx, &ty);
-    float v[4] = {sx,sy,tx,ty};
-    
-    shader_setuniform(PROGRAM_RENDERBUFFER, 0, UNIFORM_FLOAT4, v);
-
-    shader_program(PROGRAM_RENDERBUFFER, NULL);
-    RS->drawcall++;
-    
-    renderbuffer_commit(rb);
-    
-    render_set(RS->R, VERTEXBUFFER, RS->vertex_buffer, 0);
-}
-
-
-int
-shader_adduniform(int prog,const char *name ,enum UNIFORM_FORMAT t){
-    assert(prog >= 0 && prog < MAX_PROGRAM);
-    shader_program(prog, NULL);
-    struct program *p = &RS->program[prog];
-    assert(p->uniform_number < MAX_UNIFORM);
-    
-    int loc = render_shader_locuniform(RS->R, name);
-    int index = p->uniform_number++;
-    struct uniform *u = &p->uniform[index];
-    u->loc = loc;
-    u->type = t;
-    if(index == 0){
-        u->offset = 0;
-    }else {
-        struct uniform *lu = &p->uniform[index -1];
-        u->offset = lu->offset + shader_uniformsize(lu->type);
-    }
-    if(loc < 0){
-        return -1;
-    }
-    return index;
-}
-
-
-void
-shader_setuniform(int prog,int index,enum UNIFORM_FORMAT t, float *v){
-    rs_commit();
-    struct program *p = &RS->program[prog];
-    assert(index >= 0 && index <p->uniform_number);
-    struct uniform *u = &p->uniform[index];
-    assert(t == u->type);
-    int n = shader_uniformsize(t);
-    memcpy(p->uniform_value + u->offset, v, n*sizeof(float));
-    p->reset_uniform = true;
-    p->uniform_change[index] = true;
-}
 
 int
 shader_uniformsize(enum UNIFORM_FORMAT t){
@@ -429,22 +422,45 @@ shader_uniformsize(enum UNIFORM_FORMAT t){
     return n;
 }
 
-//reset
 void
-shader_reset(){
-    struct render_state * rs = RS;
-    render_state_reset(rs->R);
-    render_setblend(rs->R, BLEND_ONE, BLEND_ONE_MINUS_SRC_ALPHA);
-    if(RS->current_program != -1){
-        render_shader_bind(rs->R, RS->program[RS->current_program].prog);
-    }
-    render_set(rs->R, VERTEXLAYOUT, rs->layout, 0);
-    render_set(rs->R, TEXTURE, RS->tex[0], 0);
-    render_set(rs->R, INDEXBUFFER, RS->index_buffer, 0);
-    render_set(rs->R, VERTEXBUFFER, RS->vertex_buffer, 0);
+shader_setuniform(int prog,int index,enum UNIFORM_FORMAT t, float *v){
+    rs_commit();
+    struct program *p = &RS->program[prog];
+    assert(index >= 0 && index <p->uniform_number);
+    struct uniform *u = &p->uniform[index];
+    assert(t == u->type);
+    int n = shader_uniformsize(t);
+    memcpy(p->uniform_value + u->offset, v, n*sizeof(float));
+    p->reset_uniform = true;
+    p->uniform_change[index] = true;
 }
 
 
+
+
+int
+shader_adduniform(int prog,const char *name ,enum UNIFORM_FORMAT t){
+    assert(prog >= 0 && prog < MAX_PROGRAM);
+    shader_program(prog, NULL);
+    struct program *p = &RS->program[prog];
+    assert(p->uniform_number < MAX_UNIFORM);
+    
+    int loc = render_shader_locuniform(RS->R, name);
+    int index = p->uniform_number++;
+    struct uniform *u = &p->uniform[index];
+    u->loc = loc;
+    u->type = t;
+    if(index == 0){
+        u->offset = 0;
+    }else {
+        struct uniform *lu = &p->uniform[index -1];
+        u->offset = lu->offset + shader_uniformsize(lu->type);
+    }
+    if(loc < 0){
+        return -1;
+    }
+    return index;
+}
 
 // material system
 
