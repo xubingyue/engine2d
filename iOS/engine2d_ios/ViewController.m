@@ -10,7 +10,9 @@
 #import "winfw.h"
 static ViewController *_controller = nil;
 
-@interface ViewController ()
+@interface ViewController (){
+    int disableGesture;
+}
 
 @property(strong,nonatomic)EAGLContext *context;
 @end
@@ -49,7 +51,26 @@ static ViewController *_controller = nil;
     NSString *appFolderPath = [[NSBundle mainBundle]resourcePath];
     const char* folder = [appFolderPath UTF8String];
     
-    engine2d_win_init(bounds.origin.x, bounds.origin.y, bounds.size.width, bounds.size.height, screenScale, folder);
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 80000
+    if([[[UIDevice currentDevice] systemVersion] floatValue] >= 8.0){
+        screenScale = [[UIScreen mainScreen] nativeScale];
+    }
+#endif
+    
+    const char * scriptfile = "examples/test.lua";
+    
+    struct STARTUP_INFO * startup = (struct STARTUP_INFO *)malloc(sizeof(struct STARTUP_INFO));
+    startup->orix   = bounds.origin.x;
+    startup->oriy   = bounds.origin.y;
+    startup->width  = bounds.size.width;
+    startup->height = bounds.size.height;
+    startup->scale  = screenScale;
+    startup->folder = (char*)folder;
+    startup->script = (char*)scriptfile;
+    startup->reload_count = 0;
+    startup->serialized = NULL;
+    engine2d_win_init(startup);
+   
 
 }
 
@@ -70,7 +91,10 @@ static ViewController *_controller = nil;
 //MARK: 逻辑循序
 - (void)update
 {
-    engine2d_win_update();
+    //NSLog(@"self.timeSinceLastUpdate==%.2f",self.timeSinceLastUpdate);
+//    engine2d_win_update(self.timeSinceLastUpdate);
+    engine2d_win_update(0.01f);
+
 }
 
 -(void)glkView:(GLKView *)view drawInRect:(CGRect)rect
@@ -83,7 +107,7 @@ static ViewController *_controller = nil;
 {
     for(UITouch *touch in touches){
         CGPoint p = [touch locationInView:touch.view];
-        engine2d_win_touch(p.x, p.y, TOUCH_BEGIN);
+       disableGesture =  engine2d_win_touch(p.x, p.y, TOUCH_BEGIN);
     }
 }
 
@@ -104,7 +128,9 @@ static ViewController *_controller = nil;
     }
 }
 
-
+- (BOOL) gestureRecognizerShouldBegin:(UIGestureRecognizer *)gr {
+    return (disableGesture == 0 ? YES : NO);
+}
 
 -(BOOL)prefersStatusBarHidden
 {
