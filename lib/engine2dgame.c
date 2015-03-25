@@ -36,6 +36,9 @@
 #define ENGINE_PAUSE "ENGINE2D_PAUSE"
 
 
+//optional functions
+#define ENGINE_VIEW_LAYOUT  "ENGINE2D_VIEW_LAYOUT"
+
 #define TRACEBACK_FUNCTION  1
 #define UPDATE_FUNCTION     2
 #define DRAWFRAME_FUNCTION  3
@@ -395,5 +398,20 @@ engine2d_game_pause(struct game *G){
     lua_settop(L, TOP_FUNCTION);
 }
 
+//optial function
+void engine2d_game_view_layout(struct game* G, int start, float x, float y, float width, float height){
+    lua_State *L = G->L;
+    lua_getfield(L, LUA_REGISTRYINDEX, ENGINE_VIEW_LAYOUT);
+    if(lua_isfunction(L, -1)){
+        lua_pushinteger(L, -1);
+        lua_pushnumber(L, start);
+        lua_pushnumber(L, x);
+        lua_pushnumber(L, y);
+        lua_pushnumber(L, width);
+        lua_pushnumber(L, height);
+        call(L, 5, 0);
+    }
+    lua_settop(L, TOP_FUNCTION);
+}
 
 
