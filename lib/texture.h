@@ -50,4 +50,8 @@ texture_delete_framebuffer(int id);
 const char *
 texture_update(int id,int pixel_width,int pixel_height,void *data);
 
+
+const char*
+texture_sub_update(int id, int x, int y, int width, int height, void *data) ;
+
 #endif /* defined(__engine2d__texture__) */
