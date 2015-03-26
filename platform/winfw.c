@@ -29,33 +29,25 @@ struct WINDOWGAME {
 static struct WINDOWGAME *G = NULL;
 static struct STARTUP_INFO *STARTUP = NULL;
 
+
+
+
 static const char * startscript =
-"local path, script = ...\n"
-"require(\"engine2d.framework\").WorkDir = path..'/'\n"
+"local path, script,startup = ...\n"
+"local fw=require(\"engine2d.framework\")\n"
+"fw.WorkDir = path..'/'\n"
+"fw.GameInfo = startup\n"
 "assert(script, 'I need a script name')\n"
+
 "script = path..[[/]]..script\n"
-"package.path = path .. [[/?.lua;]] .. path .. [[/?/init.lua;./?.lua;./?/init.lua]]\n"
-"package.path = package.path..'/src/?.lua;'\n"
+"package.path = path .. [[/?.lua;]] .. path .. [[/?/init.lua;./?.lua;./?/init.lua;]]\n"
+"print(\"2222package.path==> \",package.path)"
+"package.path = package.path..path..'/package/?.lua;'\n"
 
 "print(\"package.path==> \",package.path)"
 "local f = loadfile(script)\n"
 "f(script)\n";
 
-
-//static const char * startscript =
-//"local path, script, sw, sh, ss = ...\n"
-//"local fw = require('engine2d.framework')\n"
-//"fw.WorkDir = path..'/'\n"
-//"fw.ScreenWidth, fw.ScreenHeight, fw.ScreenScale = sw, sh, ss\n"
-//"assert(script, 'I need a script name')\n"
-//"script = path..'/'..script\n"
-//"package.path = './?.lua;./?/init.lua;'\n"
-//"package.path = package.path..path..'/?.lua;'\n"
-//"package.path = package.path..path..'/?/init.lua;'\n"
-//"package.path = package.path..path..'/src/?.lua;'\n"
-//"print(\"package.path==> \",package.path)"
-//"local f = loadfile(script)\n"
-//"f(script)\n";
 
 static struct WINDOWGAME *
 create_game() {
@@ -77,11 +69,41 @@ traceback(lua_State *L) {
     return 1;
 }
 
+static void
+push_startup_info(lua_State* L, struct STARTUP_INFO* start) {
+    lua_newtable(L);
+    lua_pushnumber(L, start->orix);
+    lua_setfield(L, -2, "orix");
+    lua_pushnumber(L, start->oriy);
+    lua_setfield(L, -2, "oriy");
+    
+    lua_pushnumber(L, start->width);
+    lua_setfield(L, -2, "width");
+    lua_pushnumber(L, start->height);
+    lua_setfield(L, -2, "height");
+    
+    lua_pushnumber(L, start->scale);
+    lua_setfield(L, -2, "scale");
+    lua_pushinteger(L, start->reload_count);
+    lua_setfield(L, -2, "reload_count");
+    
+    if (start->serialized)
+        lua_pushlightuserdata(L, start->serialized);
+    else
+        lua_pushnil(L);
+    lua_setfield(L, -2, "serialized");
+    
+    lua_pushinteger(L, LOGIC_FRAME);
+    lua_setfield(L, -2, "logic_frame");
+}
 
 void
 engine2d_win_init(struct STARTUP_INFO* startup) {
     STARTUP = startup;
     G = create_game();
+    
+    screen_init(startup->width, startup->height, startup->scale);
+
     
     lua_State *L = engine2d_game_lua(G->game);
     
@@ -96,7 +118,8 @@ engine2d_win_init(struct STARTUP_INFO* startup) {
     
     lua_pushstring(L, startup->folder);
     lua_pushstring(L, startup->script);
-    err = lua_pcall(L, 2, 0, tb);
+    push_startup_info(L, startup);
+    err = lua_pcall(L, 3, 0, tb);
     if (err) {
         const char *msg = lua_tostring(L,-1);
         fault("%s", msg);
@@ -104,9 +127,8 @@ engine2d_win_init(struct STARTUP_INFO* startup) {
     
     lua_pop(L,1);
     
-    screen_init(startup->width, startup->height, startup->scale);
 
-    //engine2d_game_logicframe(LOGIC_FRAME);
+    engine2d_game_logicframe(LOGIC_FRAME);
 
     engine2d_game_start(G->game);
 }
