@@ -57,8 +57,10 @@ static ViewController *_controller = nil;
     }
 #endif
     
-    const char * scriptfile = "examples/test.lua";
-    
+     //const char * scriptfile = "examples/test.lua";
+    //const char * scriptfile = "examples/flappybird.lua";
+
+    const char * scriptfile = "package/main.lua";
     struct STARTUP_INFO * startup = (struct STARTUP_INFO *)malloc(sizeof(struct STARTUP_INFO));
     startup->orix   = bounds.origin.x;
     startup->oriy   = bounds.origin.y;
