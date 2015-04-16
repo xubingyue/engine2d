@@ -36,7 +36,7 @@ struct quad{
 };
 
 struct render_buffer{
-    int object;
+    int object;//一个图元对象
     int texid;
     RID vbid;
     struct quad vb[MAX_COMMBINE];

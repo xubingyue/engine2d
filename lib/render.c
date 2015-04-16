@@ -41,6 +41,7 @@ struct buffer {
     int stride;
 };
 
+//顶点属性
 struct attrib{
     int n;
     struct vertex_attrib a[MAX_ATTRIB];
@@ -51,10 +52,11 @@ struct target{
     RID tex;
 };
 
+//纹理结构
 struct texture{
-    GLuint glid;
-    int width;
-    int height;
+    GLuint glid;//纹理索引 id
+    int width; //纹理图像的宽
+    int height;//纹理图像的高
     int mipmap;
     enum TEXTURE_FORMAT format;
     enum TEXTURE_TYPE type;
@@ -402,17 +404,14 @@ render_exit(struct render *R){
 
 void
 render_setviewport(struct render *R,int x,int y,int width,int height){
-    glViewport(x,y, width, height);
+    glViewport(x,y, width, height);//glViewport在默认情况下，视口被设置为占据打开窗口的整个像素矩形最终将图像映射到这个矩形中
 }
 
+//裁剪盒子
 void
 render_setscissor(struct render *R , int x, int y,int w,int h){
     glScissor(x,y, w, h);
 }
-
-
-
-
 
 
 //texture
@@ -734,17 +733,17 @@ render_state_commit(struct render *R){
             }
             static  GLenum blend[] = {
                 0,
-                GL_ZERO,
-                GL_ONE,
-                GL_SRC_COLOR,
+                GL_ZERO,//表示使用0.0作为因子，实际上相当于不使用这种颜色参与混合运算。
+                GL_ONE, //表示使用1.0作为因子，实际上相当于完全的使用了这种颜色参与混合运算
+                GL_SRC_COLOR,//把源颜色的四个分量分别作为因子的四个分量
                 GL_ONE_MINUS_SRC_COLOR,
-                GL_SRC_ALPHA,
-                GL_ONE_MINUS_SRC_ALPHA,
-                GL_DST_ALPHA,
-                GL_ONE_MINUS_DST_ALPHA,
-                GL_DST_COLOR,
+                GL_SRC_ALPHA,//表示使用源颜色的alpha值来作为因子。
+                GL_ONE_MINUS_SRC_ALPHA,//表示用1.0减去源颜色的alpha值来作为因子。
+                GL_DST_ALPHA,//表示使用目标颜色的alpha值来作为因子
+                GL_ONE_MINUS_DST_ALPHA,//表示用1.0减去目标颜色的alpha值来作为因子。
+                GL_DST_COLOR,////把目标颜色的四个分量分别作为因子的四个分量
                 GL_ONE_MINUS_DST_COLOR,
-                GL_SRC_ALPHA_SATURATE,
+                GL_SRC_ALPHA_SATURATE,//新版本的OpenGL还允许颜色的alpha 值和RGB值采用不同的混合因子
             };
             
             enum BLEND_FORMAT src = R->current.blend_src;

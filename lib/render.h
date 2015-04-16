@@ -48,13 +48,13 @@ struct shader_init_args{
 
 
 enum RENDER_OBJ{
-    INVALID = 0,
+    INVALID = 0,    
     VERTEXLAYOUT,
-    VERTEXBUFFER,
-    INDEXBUFFER,
-    TEXTURE,
+    VERTEXBUFFER,//顶点buffer
+    INDEXBUFFER,//索引buffer
+    TEXTURE,    //纹理
     TARGET,
-    SHADER,
+    SHADER,     //着色器片段
 };
 
 
@@ -76,7 +76,7 @@ enum TEXTURE_FORMAT{
     TEXTURE_ETC1,
 };
 
-
+//RGB模式下 混合类型
 enum BLEND_FORMAT{
     BLEND_DISABLE =0,
     BLEND_ZERO,

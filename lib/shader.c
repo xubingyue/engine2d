@@ -60,8 +60,8 @@ struct render_state{
     RID tex[MAX_TEXTURE_CHANNEL];
     int blendchange;
     int drawcall;
-    RID vertex_buffer;
-    RID index_buffer;
+    RID vertex_buffer;//顶点buffer
+    RID index_buffer; //索引buffer
     RID layout;
     struct render_buffer vb;
 };
@@ -104,7 +104,7 @@ shader_init(){
     render_setblend(rs->R, BLEND_ONE, BLEND_ONE_MINUS_SRC_ALPHA);
     
     uint16_t idxs[6* MAX_COMMBINE];
-    int i;
+    int i;   //? todo ?
     for (i=0; i<MAX_COMMBINE; i++) {
         idxs[i*6] = i*4;
         idxs[i*6+1] = i*4+1;
@@ -214,8 +214,9 @@ drawcall_count(){
 
 static void
 renderbuffer_commit(struct render_buffer *rb){
-    struct render *R = RS->R;
-    render_draw(R, DRAW_TRIANGLE, 0, 6 * rb->object);
+   //绘制图元的数量乘上一个图元的顶点数 (6)
+    //为索引值的类型
+    render_draw(RS->R, DRAW_TRIANGLE, 0, 6 * rb->object);
 }
 
 static void
@@ -225,8 +226,7 @@ rs_commit(){
         return;
     }
     RS->drawcall++;
-    struct render * R = RS->R;
-    render_buffer_update(R, RS->vertex_buffer, rb->vb, 4 *rb->object);
+    render_buffer_update( RS->R, RS->vertex_buffer, rb->vb, 4 *rb->object);
     renderbuffer_commit(rb);
     
     rb->object = 0;
