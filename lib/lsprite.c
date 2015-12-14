@@ -443,7 +443,7 @@ lgetwpos(lua_State *L) {
 /**
  *  只写 给对象设置一个专有的渲染程序。program 是一个数字 id 。
  这是一个高级特性，使用它需要对 opengl shader program 有一定了解。
- ejoy2d 目前在 shader.lua 中预设了几段 program 。
+ engine2d 目前在 shader.lua 中预设了几段 program 。
  比如 sprite.program = shader.id "GRAY" 可以让一个对象以灰色图形式渲染
  *
  *  @param L <#L description#>

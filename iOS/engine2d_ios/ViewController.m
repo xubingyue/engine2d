@@ -56,23 +56,26 @@ static ViewController *_controller = nil;
         screenScale = [[UIScreen mainScreen] nativeScale];
     }
 #endif
-    
-     //const char * scriptfile = "examples/test.lua";
-    //const char * scriptfile = "examples/flappybird.lua";
 
-    const char * scriptfile = "package/main.lua";
+
+
+    //const char * scriptfile = "examples/flappybird.lua";
+    const char * scriptfile = "examples/main.lua";
     struct STARTUP_INFO * startup = (struct STARTUP_INFO *)malloc(sizeof(struct STARTUP_INFO));
+    startup->folder = (char*)folder;
+    startup->lua_root = NULL;
+
     startup->orix   = bounds.origin.x;
     startup->oriy   = bounds.origin.y;
     startup->width  = bounds.size.width;
     startup->height = bounds.size.height;
     startup->scale  = screenScale;
-    startup->folder = (char*)folder;
     startup->script = (char*)scriptfile;
     startup->reload_count = 0;
     startup->serialized = NULL;
     engine2d_win_init(startup);
-   
+
+
 
 }
 

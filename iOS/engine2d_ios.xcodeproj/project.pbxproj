@@ -67,10 +67,10 @@
 		795CD48D1AC0027700634E92 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 795CD4181AC0027700634E92 /* AppDelegate.m */; };
 		795CD48E1AC0027700634E92 /* font.m in Sources */ = {isa = PBXBuildFile; fileRef = 795CD4191AC0027700634E92 /* font.m */; };
 		795CD48F1AC0027700634E92 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 795CD41A1AC0027700634E92 /* Images.xcassets */; };
-		795CD4901AC0027700634E92 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 795CD41B1AC0027700634E92 /* Info.plist */; };
 		795CD4C81AC0027700634E92 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 795CD4881AC0027700634E92 /* main.m */; };
 		795CD4C91AC0027700634E92 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 795CD48A1AC0027700634E92 /* ViewController.m */; };
 		795CD4CA1AC0027700634E92 /* winfw.c in Sources */ = {isa = PBXBuildFile; fileRef = 795CD48B1AC0027700634E92 /* winfw.c */; };
+		79AAF0FB1C1E9F4600615FB2 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 79AAF0FA1C1E9F4600615FB2 /* Default-568h@2x.png */; settings = {ASSET_TAGS = (); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -193,6 +193,7 @@
 		795CD48B1AC0027700634E92 /* winfw.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = winfw.c; sourceTree = "<group>"; };
 		795CD48C1AC0027700634E92 /* winfw.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = winfw.h; sourceTree = "<group>"; };
 		799F5FF51AB6659E00D630F2 /* engine2d_ios.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = engine2d_ios.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		79AAF0FA1C1E9F4600615FB2 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -350,6 +351,7 @@
 		799F5FEC1AB6659E00D630F2 = {
 			isa = PBXGroup;
 			children = (
+				79AAF0FA1C1E9F4600615FB2 /* Default-568h@2x.png */,
 				795CD4121AC001EE00634E92 /* engine2d */,
 				795CD40B1AC0006500634E92 /* examples */,
 				795CD4161AC0027700634E92 /* engine2d_ios */,
@@ -391,7 +393,7 @@
 		799F5FED1AB6659E00D630F2 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0610;
+				LastUpgradeCheck = 0700;
 				ORGANIZATIONNAME = liutianshx;
 				TargetAttributes = {
 					799F5FF41AB6659E00D630F2 = {
@@ -422,8 +424,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				795CD4901AC0027700634E92 /* Info.plist in Resources */,
 				795CD48F1AC0027700634E92 /* Images.xcassets in Resources */,
+				79AAF0FB1C1E9F4600615FB2 /* Default-568h@2x.png in Resources */,
 				795CD40F1AC0010000634E92 /* examples in Resources */,
 				795CD4131AC001EE00634E92 /* engine2d in Resources */,
 			);
@@ -522,6 +524,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -584,6 +587,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = engine2d_ios/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.liutianshx.gameEngine.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = engine2d_ios;
 			};
 			name = Debug;
@@ -594,6 +598,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = engine2d_ios/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.liutianshx.gameEngine.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = engine2d_ios;
 			};
 			name = Release;

@@ -170,7 +170,7 @@ engine2d_game(){
     luaL_requiref(L, "engine2d.sprite.c", engine2d_sprite, 0);
     luaL_requiref(L, "engine2d.renderbuffer", engine2d_renderbuffer, 0);
     luaL_requiref(L, "engine2d.matrix.c", engine2d_matrix, 0);
-    luaL_requiref(L, "ejoy2d.particle.c", engine2d_particle, 0);
+    luaL_requiref(L, "engine2d.particle.c", engine2d_particle, 0);
 
     lua_settop(L, 0);
     
