@@ -16,14 +16,27 @@
 #define TOUCH_END 1
 #define TOUCH_MOVE 2
 
+struct STARTUP_INFO{
+    float orix, oriy;
+    float width, height;
+    float scale;
+    char* folder;
+    char* lua_root;
+    char* script;
+    void* serialized;
+    int reload_count;
+    bool auto_rotate;
+};
 
-void engine2d_win_init(int orix,int oriy,int width,int height,float scale,const char* folder);
+
+
+void engine2d_win_init(struct STARTUP_INFO* startup);
 
 void engine2d_win_frame();
 
 void engine2d_win_update();
 
-void engine2d_win_touch(int x,int y,int touch);
+int engine2d_win_touch(int x,int y,int touch);
 
 void engine2d_win_resume();
 
