@@ -13,8 +13,8 @@ pack.load {
 
 local DEBUG = false
 
-local screen_width = 1024
-local screen_height = 768
+local screen_width = fw.ScreenWidth
+local screen_height = fw.ScreenWidth
 
 -- all sprites
 local sky1 = ej.sprite("birds", "sky_bg")
@@ -292,7 +292,8 @@ bird.sprite = ej.sprite("birds", "bird")
 bird.x = 50
 bird.half_width = _width(bird.sprite)
 bird.half_height = _half_height(bird.sprite)
-bird.y = screen_height - land_height - bird.half_height
+print("screen_height=="..screen_height..land_height..bird.half_height)
+bird.y = screen_height - land_height - bird.half_height - 20
 
 -- const
 bird.touch_speed = 13.5
@@ -439,7 +440,7 @@ function game.drawframe()
 
   bg:draw()
   bird:draw()
-  scoreboard:draw{x=screen_width/2, y=150}
+  scoreboard:draw{x= screen_width/2, y=20}
 end
 
 function game.touch(what, x, y)
